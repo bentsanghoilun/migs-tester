@@ -21,11 +21,10 @@ code {
 
 @media (min-width: 1200px){
   .container, .container-lg, .container-md, .container-sm, .container-xl {
-    max-width: 1140px;
+    max-width: 798px !important;
   }
   .pay-form{
-    max-width: 768px !important;
     margin: 48px auto;
-    padding: 1rem 5rem !important;
+    padding: 3rem 8rem !important;
   }
 }

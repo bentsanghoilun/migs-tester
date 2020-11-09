@@ -14,6 +14,12 @@ function App() {
     <Container>
       <Row>
         <Col>
+        <br></br>
+        <img src="https://cdn-gx.dataweavers.io/-/media/global-payments/images/shared/globalpayments_wordmark_blue.png?modified=20180405212244&h=26&w=175&la=en&hash=935077B14C77B5A176B8A564A8720943"/>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
           <Form className="pay-form">
             <h2>Migs Testing Tool</h2>
             <br></br>
