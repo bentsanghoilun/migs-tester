@@ -37,7 +37,11 @@ function App () {
   const [cardnumValue, setcardnumValue] = useState("");
 
   const expRef = useRef(null);
-  useEffect(() => {});
+  const amountRef = useRef(null);
+
+  useEffect(() => {
+    amountRef.current.focus();
+  }, []);
 
   const updateCardNum = (value) => {
     let cleanNum = value.replace(/-/g,"");
@@ -104,7 +108,7 @@ function App () {
                 <InputGroup.Prepend>
                   <InputGroup.Text>{sign}</InputGroup.Text>
                 </InputGroup.Prepend>
-                <Form.Control aria-label="Amount (to the nearest dollar)" />
+                <Form.Control aria-label="Amount (to the nearest dollar)" ref={amountRef}/>
               </InputGroup>
             </Form.Group>
 
@@ -118,14 +122,14 @@ function App () {
             <FaCcVisa className="cardtype" style={{color: isVisa}}/>
             <FaCcMastercard className="cardtype" style={{color: isMc}}/>
             <FaCcAmex className="cardtype" style={{color: isAmex}}/>
-              <Form.Control size="lg" type="text" placeholder="0000-0000-0000-0000" 
+              <Form.Control size="lg" type="text" inputmode="number" placeholder="0000-0000-0000-0000" 
                 value={cardnumValue}
                 onChange={e => updateCardNum(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group controlId="exp">
-              <Form.Control size="lg" type="text" placeholder="MM/YY" ref={expRef}/>
+              <Form.Control size="lg" type="text" inputmode="number" placeholder="MM/YY" ref={expRef}/>
             </Form.Group>
 
             <br></br>
