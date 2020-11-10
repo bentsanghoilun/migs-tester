@@ -7,6 +7,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.header{
+  padding-top: 24px;
+}
+.header > .col{
+  align-items: center;
+  display: flex;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -38,8 +45,9 @@ code {
   width: auto;
 }
 h2{
-  color: #003c71;
+  color: #fff;
   font-weight: 700 !important;
+  text-align: right;
 }
 
 @media (min-width: 1200px){

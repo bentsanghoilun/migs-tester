@@ -37,6 +37,7 @@ function App () {
 
   const expRef = useRef(null);
   const amountRef = useRef(null);
+  const cvvRef = useRef(null);
 
   useEffect(() => {
     amountRef.current.focus();
@@ -80,6 +81,9 @@ function App () {
       let cleanExp = value.replace(/\//g, "");
       let newExp = cleanExp.match(new RegExp('.{1,2}', 'g')).join("/");
       setexpValue(newExp);
+      if(cleanExp.length === 4){
+        cvvRef.current.focus();
+      }
     }else{
       setexpValue("");
     }
@@ -87,17 +91,20 @@ function App () {
 
   return (
     <Container>
-      <Row>
+      <Row className="header">
         <Col>
-        <br></br>
         <img className="logo" src="https://s21.q4cdn.com/254933054/files/images/GlobalPayments_Symbol_Wordmark_REV.png" alt="Global Payments"/>
+        </Col>
+        <Col style={{
+          justifyContent: "flex-end"
+        }}>
+          <h2>Migs Testing Tool</h2>
         </Col>
       </Row>
       <Row>
         <Col>
           <Form className="pay-form">
-            <h2>Migs Testing Tool</h2>
-            <br></br>
+            
             <h4>Payment Details</h4>
             <Form.Group controlId="orderID">
               <Form.Label>Order ID</Form.Label>
@@ -147,14 +154,26 @@ function App () {
               />
             </Form.Group>
 
-            <Form.Group controlId="exp">
-              <Form.Control size="lg" type="tel" inputmode="number" 
-                placeholder="MM/YY" 
-                ref={expRef}
-                onChange={e => updateExp(e.target.value)}
-                value={expValue}
-              />
-            </Form.Group>
+            <Row>
+              <Col>
+                <Form.Group controlId="exp">
+                  <Form.Control size="lg" type="tel" inputmode="number" 
+                    placeholder="MM/YY" 
+                    ref={expRef}
+                    onChange={e => updateExp(e.target.value)}
+                    value={expValue}
+                  />
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group controlId="cvv">
+                  <Form.Control size="lg" type="tel" inputmode="number" 
+                    placeholder="CVV" 
+                    ref={cvvRef}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
             <br></br>
             <Button variant="primary" type="submit" size="lg" block>PAY NOW</Button>
