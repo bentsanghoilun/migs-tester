@@ -5,12 +5,9 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form'; 
-import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCcVisa, FaCcMastercard, FaCcAmex } from 'react-icons/fa';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 
 var md5 = require('md5');
 var orderID = md5(Math.random()*999);
@@ -32,7 +29,6 @@ function App () {
   ];
   const defCardcolor = "ccc";
   const actCardcolor = "46f";
-  const [sign, setSign] = useState("$");
   const [isVisa, setisVisa] = useState(defCardcolor);
   const [isMc, setisMc] = useState(defCardcolor);
   const [isAmex, setisAmex] = useState(defCardcolor);
@@ -121,7 +117,6 @@ function App () {
                     type="text" 
                     as="select" 
                     id="currencySelect" 
-                    onChange={e => setSign(e.target.value[0])}
                   >
                     {
                       currencies.map(
@@ -146,14 +141,14 @@ function App () {
             <FaCcVisa className="cardtype" style={{color: isVisa}}/>
             <FaCcMastercard className="cardtype" style={{color: isMc}}/>
             <FaCcAmex className="cardtype" style={{color: isAmex}}/>
-              <Form.Control size="lg" type="text" inputmode="number" placeholder="0000-0000-0000-0000" 
+              <Form.Control size="lg" type="tel" inputmode="number" placeholder="0000-0000-0000-0000" 
                 value={cardnumValue}
                 onChange={e => updateCardNum(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group controlId="exp">
-              <Form.Control size="lg" type="text" inputmode="number" 
+              <Form.Control size="lg" type="tel" inputmode="number" 
                 placeholder="MM/YY" 
                 ref={expRef}
                 onChange={e => updateExp(e.target.value)}
