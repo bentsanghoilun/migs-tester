@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCcVisa, FaCcMastercard, FaCcAmex } from 'react-icons/fa';
+import axios from 'axios';
 
 var md5 = require('md5');
 var orderID = md5(Math.random()*999);
@@ -89,6 +90,40 @@ function App () {
     }
   };
 
+  //Use effect for post to MIGS
+  useEffect(() => {
+
+  }, []);
+
+  //post to MIGS handler
+  const makePay = () => {
+    const nvp = {
+      vpc_Version: "1",
+      vpc_Command: "pay",
+      vpc_AccessCode: "7CA51E8F",
+      vpc_MerchTxnRef: orderID,
+      vpc_OrderInfo: orderID,
+      vpc_Merchant: "TEST00055844302",
+      vpc_Amount: "100",
+      vpc_CardNum: "4434260000000008",
+      vpc_CardExp: "2105",
+      vpc_CardSecurityCode: "100",
+    };
+    const headers = {
+      "Access-Control-Allow-Origin": '*',
+    }
+
+    axios.post('https://migs.mastercard.com.au/vpcdps', nvp, {
+      headers: headers
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
+
   return (
     <Container>
       <Row className="header">
@@ -108,7 +143,7 @@ function App () {
             <h4>Payment Details</h4>
             <Form.Group controlId="orderID">
               <Form.Label>Order ID</Form.Label>
-              <Form.Control size="lg" type="text" placeholder="Order ID" value={orderID}/>
+              <Form.Control size="lg" type="text" placeholder="Order ID" defaultValue={orderID}/>
             </Form.Group>
 
             <Form.Group controlId="amount">
@@ -122,12 +157,11 @@ function App () {
                   <Form.Control 
                     size="lg" 
                     type="text" 
-                    as="select" 
-                    id="currencySelect" 
+                    as="select"
                   >
                     {
                       currencies.map(
-                        currency => (<option value={currency.sign+" "+currency.currency}>{currency.currency}</option>)
+                        currency => (<option key={currency.currency} value={currency.sign+" "+currency.currency}>{currency.currency}</option>)
                       )
                     }
                   </Form.Control>
@@ -148,7 +182,7 @@ function App () {
             <FaCcVisa className="cardtype" style={{color: isVisa}}/>
             <FaCcMastercard className="cardtype" style={{color: isMc}}/>
             <FaCcAmex className="cardtype" style={{color: isAmex}}/>
-              <Form.Control size="lg" type="tel" inputmode="number" placeholder="0000-0000-0000-0000" 
+              <Form.Control size="lg" type="tel" inputMode="number" placeholder="0000-0000-0000-0000" 
                 value={cardnumValue}
                 onChange={e => updateCardNum(e.target.value)}
               />
@@ -157,7 +191,7 @@ function App () {
             <Row>
               <Col>
                 <Form.Group controlId="exp">
-                  <Form.Control size="lg" type="tel" inputmode="number" 
+                  <Form.Control size="lg" type="tel" inputMode="number" 
                     placeholder="MM/YY" 
                     ref={expRef}
                     onChange={e => updateExp(e.target.value)}
@@ -167,7 +201,7 @@ function App () {
               </Col>
               <Col>
                 <Form.Group controlId="cvv">
-                  <Form.Control size="lg" type="tel" inputmode="number" 
+                  <Form.Control size="lg" type="tel" inputMode="number" 
                     placeholder="CVV" 
                     ref={cvvRef}
                   />
@@ -176,7 +210,12 @@ function App () {
             </Row>
 
             <br></br>
-            <Button variant="primary" type="submit" size="lg" block>PAY NOW</Button>
+            <Button 
+              variant="primary" 
+              size="lg" 
+              block
+              onClick = {makePay}
+            >PAY NOW</Button>
           </Form>
         </Col>
       </Row>
