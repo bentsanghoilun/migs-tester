@@ -18,6 +18,11 @@ code {
   border-radius: 12px;
   margin: 1rem 0rem;
 }
+.cardtype{
+  font-size: 1.3rem;
+  margin: 6px;
+  transition: 300ms;
+}
 
 @media (min-width: 1200px){
   .container, .container-lg, .container-md, .container-sm, .container-xl {

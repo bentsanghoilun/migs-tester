@@ -7,15 +7,73 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form'; 
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
+import React, { useState, useRef, useEffect } from 'react';
+import { FaCcVisa, FaCcMastercard, FaCcAmex } from 'react-icons/fa';
 
-function App() {
-  var md5 = require('md5');
+var md5 = require('md5');
+var orderID = md5(Math.random()*999);
+
+function App () {
+  const currencies = [
+    {
+      currency: 'HKD',
+      sign: '$',
+    },
+    {
+      currency: 'GBP',
+      sign: '£',
+    },
+    {
+      currency: 'USD',
+      sign: '$',
+    },
+  ];
+  const defCardcolor = "ccc";
+  const actCardcolor = "46f";
+  const [sign, setSign] = useState("$");
+  const [isVisa, setisVisa] = useState(defCardcolor);
+  const [isMc, setisMc] = useState(defCardcolor);
+  const [isAmex, setisAmex] = useState(defCardcolor);
+  const [cardnumValue, setcardnumValue] = useState("");
+
+  const expRef = useRef(null);
+  useEffect(() => {});
+
+  const updateCardNum = (value) => {
+    let cleanNum = value.replace(/-/g,"");
+    if(cleanNum[0] === "2" || cleanNum[0] === "5"){
+      setisMc(actCardcolor);
+    }else{
+      setisMc(defCardcolor);
+    }
+    if(cleanNum[0] === "4"){
+      setisVisa(actCardcolor);
+    }else{
+      setisVisa(defCardcolor);
+    }
+    if(cleanNum[0] === "3"){
+      setisAmex(actCardcolor);
+    }else{
+      setisAmex(defCardcolor);
+    }
+    if(cleanNum.length > 16){
+      cleanNum = cleanNum.slice(0,16);
+    }
+    let newNum = cleanNum.match(new RegExp('.{1,4}', 'g')).join("-");
+    setcardnumValue(newNum);
+
+    if(cleanNum.length === 16){
+      console.log("reached 16");
+      expRef.current.focus();
+    }
+  };
+
   return (
     <Container>
       <Row>
         <Col>
         <br></br>
-        <img src="https://cdn-gx.dataweavers.io/-/media/global-payments/images/shared/globalpayments_wordmark_blue.png?modified=20180405212244&h=26&w=175&la=en&hash=935077B14C77B5A176B8A564A8720943"/>
+        <img src="https://cdn-gx.dataweavers.io/-/media/global-payments/images/shared/globalpayments_wordmark_blue.png?modified=20180405212244&h=26&w=175&la=en&hash=935077B14C77B5A176B8A564A8720943" alt="Global Payments"/>
         </Col>
       </Row>
       <Row>
@@ -26,15 +84,17 @@ function App() {
             <h4>Payment Details</h4>
             <Form.Group controlId="orderID">
               <Form.Label>Order ID</Form.Label>
-              <Form.Control size="lg" type="text" placeholder="Order ID" value={md5(Math.random()*999)}/>
+              <Form.Control size="lg" type="text" placeholder="Order ID" value={orderID}/>
             </Form.Group>
 
             <Form.Group controlId="currency">
               <Form.Label>Currency</Form.Label>
-              <Form.Control size="lg" type="text" as="select">
-              <option>HKD</option>
-              <option>GBP</option>
-              <option>USD</option>
+              <Form.Control size="lg" type="text" as="select" id="currencySelect" onChange={e => setSign(e.target.value[0])}>
+              {
+                currencies.map(
+                  currency => (<option value={currency.sign+" "+currency.currency}>{currency.currency}</option>)
+                )
+              }
               </Form.Control>
             </Form.Group>
 
@@ -42,7 +102,7 @@ function App() {
               <Form.Label>Amount</Form.Label>
               <InputGroup size="lg" className="mb-3">
                 <InputGroup.Prepend>
-                  <InputGroup.Text>$</InputGroup.Text>
+                  <InputGroup.Text>{sign}</InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control aria-label="Amount (to the nearest dollar)" />
               </InputGroup>
@@ -55,11 +115,17 @@ function App() {
             </Form.Group>
 
             <Form.Group controlId="cardNum">
-              <Form.Control size="lg" type="text" placeholder="0000-0000-0000-0000" />
+            <FaCcVisa className="cardtype" style={{color: isVisa}}/>
+            <FaCcMastercard className="cardtype" style={{color: isMc}}/>
+            <FaCcAmex className="cardtype" style={{color: isAmex}}/>
+              <Form.Control size="lg" type="text" placeholder="0000-0000-0000-0000" 
+                value={cardnumValue}
+                onChange={e => updateCardNum(e.target.value)}
+              />
             </Form.Group>
 
             <Form.Group controlId="exp">
-              <Form.Control size="lg" type="text" placeholder="MM/YY" />
+              <Form.Control size="lg" type="text" placeholder="MM/YY" ref={expRef}/>
             </Form.Group>
 
             <br></br>
