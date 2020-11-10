@@ -9,6 +9,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCcVisa, FaCcMastercard, FaCcAmex } from 'react-icons/fa';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 var md5 = require('md5');
 var orderID = md5(Math.random()*999);
@@ -35,6 +37,7 @@ function App () {
   const [isMc, setisMc] = useState(defCardcolor);
   const [isAmex, setisAmex] = useState(defCardcolor);
   const [cardnumValue, setcardnumValue] = useState("");
+  const [expValue, setexpValue] = useState("");
 
   const expRef = useRef(null);
   const amountRef = useRef(null);
@@ -44,31 +47,45 @@ function App () {
   }, []);
 
   const updateCardNum = (value) => {
-    let cleanNum = value.replace(/-/g,"");
-    if(cleanNum[0] === "2" || cleanNum[0] === "5"){
-      setisMc(actCardcolor);
-    }else{
-      setisMc(defCardcolor);
-    }
-    if(cleanNum[0] === "4"){
-      setisVisa(actCardcolor);
-    }else{
-      setisVisa(defCardcolor);
-    }
-    if(cleanNum[0] === "3"){
-      setisAmex(actCardcolor);
-    }else{
-      setisAmex(defCardcolor);
-    }
-    if(cleanNum.length > 16){
-      cleanNum = cleanNum.slice(0,16);
-    }
-    let newNum = cleanNum.match(new RegExp('.{1,4}', 'g')).join("-");
-    setcardnumValue(newNum);
+    if(value !== ""){
+      let cleanNum = value.replace(/-/g,"");
+      if(cleanNum[0] === "2" || cleanNum[0] === "5"){
+        setisMc(actCardcolor);
+      }else{
+        setisMc(defCardcolor);
+      }
+      if(cleanNum[0] === "4"){
+        setisVisa(actCardcolor);
+      }else{
+        setisVisa(defCardcolor);
+      }
+      if(cleanNum[0] === "3"){
+        setisAmex(actCardcolor);
+      }else{
+        setisAmex(defCardcolor);
+      }
+      if(cleanNum.length > 16){
+        cleanNum = cleanNum.slice(0,16);
+      }
+      let newNum = cleanNum.match(new RegExp('.{1,4}', 'g')).join("-");
+      setcardnumValue(newNum);
 
-    if(cleanNum.length === 16){
-      console.log("reached 16");
-      expRef.current.focus();
+      if(cleanNum.length === 16){
+        console.log("reached 16");
+        expRef.current.focus();
+      }
+    }else{
+      setcardnumValue("");
+    }
+  };
+
+  const updateExp = (value) => {
+    if(value !== ""){
+      let cleanExp = value.replace(/\//g, "");
+      let newExp = cleanExp.match(new RegExp('.{1,2}', 'g')).join("/");
+      setexpValue(newExp);
+    }else{
+      setexpValue("");
     }
   };
 
@@ -77,7 +94,7 @@ function App () {
       <Row>
         <Col>
         <br></br>
-        <img src="https://cdn-gx.dataweavers.io/-/media/global-payments/images/shared/globalpayments_wordmark_blue.png?modified=20180405212244&h=26&w=175&la=en&hash=935077B14C77B5A176B8A564A8720943" alt="Global Payments"/>
+        <img className="logo" src="https://s21.q4cdn.com/254933054/files/images/GlobalPayments_Symbol_Wordmark_REV.png" alt="Global Payments"/>
         </Col>
       </Row>
       <Row>
@@ -91,25 +108,32 @@ function App () {
               <Form.Control size="lg" type="text" placeholder="Order ID" value={orderID}/>
             </Form.Group>
 
-            <Form.Group controlId="currency">
-              <Form.Label>Currency</Form.Label>
-              <Form.Control size="lg" type="text" as="select" id="currencySelect" onChange={e => setSign(e.target.value[0])}>
-              {
-                currencies.map(
-                  currency => (<option value={currency.sign+" "+currency.currency}>{currency.currency}</option>)
-                )
-              }
-              </Form.Control>
-            </Form.Group>
-
             <Form.Group controlId="amount">
-              <Form.Label>Amount</Form.Label>
-              <InputGroup size="lg" className="mb-3">
-                <InputGroup.Prepend>
-                  <InputGroup.Text>{sign}</InputGroup.Text>
-                </InputGroup.Prepend>
-                <Form.Control aria-label="Amount (to the nearest dollar)" ref={amountRef}/>
-              </InputGroup>
+              <Row>
+                <Col>
+                  <Form.Label>Amount</Form.Label>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-5 col-sm-3">
+                  <Form.Control 
+                    size="lg" 
+                    type="text" 
+                    as="select" 
+                    id="currencySelect" 
+                    onChange={e => setSign(e.target.value[0])}
+                  >
+                    {
+                      currencies.map(
+                        currency => (<option value={currency.sign+" "+currency.currency}>{currency.currency}</option>)
+                      )
+                    }
+                  </Form.Control>
+                </Col>
+                <Col>
+                  <Form.Control size="lg" aria-label="Amount (to the nearest dollar)" ref={amountRef}/>
+                </Col>
+              </Row>
             </Form.Group>
 
             <br></br>
@@ -129,7 +153,12 @@ function App () {
             </Form.Group>
 
             <Form.Group controlId="exp">
-              <Form.Control size="lg" type="text" inputmode="number" placeholder="MM/YY" ref={expRef}/>
+              <Form.Control size="lg" type="text" inputmode="number" 
+                placeholder="MM/YY" 
+                ref={expRef}
+                onChange={e => updateExp(e.target.value)}
+                value={expValue}
+              />
             </Form.Group>
 
             <br></br>

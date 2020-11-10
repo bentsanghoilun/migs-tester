@@ -23,6 +23,24 @@ code {
   margin: 6px;
   transition: 300ms;
 }
+.backdrop{
+  background-color: #003c71;
+  position: fixed;
+  width: 150%;
+  height: 70%;
+  top: -10%;
+  left: -25%;
+  transition: 500ms;
+  transform: rotate(2deg);
+}
+.logo{
+  height: 24px;
+  width: auto;
+}
+h2{
+  color: #003c71;
+  font-weight: 700 !important;
+}
 
 @media (min-width: 1200px){
   .container, .container-lg, .container-md, .container-sm, .container-xl {

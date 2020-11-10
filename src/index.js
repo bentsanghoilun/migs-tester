@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
+    <div className="backdrop"></div>
     <App />
   </React.StrictMode>,
   document.getElementById('root')
