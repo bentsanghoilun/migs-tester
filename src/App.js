@@ -9,25 +9,10 @@ import Button from 'react-bootstrap/Button';
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCcVisa, FaCcMastercard, FaCcAmex } from 'react-icons/fa';
 import axios from 'axios';
-
-var md5 = require('md5');
-var orderID = md5(Math.random()*999);
+import TestModule from './TestModule';
 
 function App () {
-  const currencies = [
-    {
-      currency: 'HKD',
-      sign: '$',
-    },
-    {
-      currency: 'GBP',
-      sign: '£',
-    },
-    {
-      currency: 'USD',
-      sign: '$',
-    },
-  ];
+  
   const defCardcolor = "ccc";
   const actCardcolor = "46f";
   const [isVisa, setisVisa] = useState(defCardcolor);
@@ -37,12 +22,11 @@ function App () {
   const [expValue, setexpValue] = useState("");
 
   const expRef = useRef(null);
-  const amountRef = useRef(null);
   const cvvRef = useRef(null);
 
-  useEffect(() => {
-    amountRef.current.focus();
-  }, []);
+  var md5 = require('md5');
+  var orderID = md5(Math.random()*999);
+  
 
   const updateCardNum = (value) => {
     if(value !== ""){
@@ -100,21 +84,22 @@ function App () {
     const nvp = {
       vpc_Version: "1",
       vpc_Command: "pay",
-      vpc_AccessCode: "7CA51E8F",
+      vpc_AccessCode: process.env.vpc_AccessCode,
       vpc_MerchTxnRef: orderID,
       vpc_OrderInfo: orderID,
-      vpc_Merchant: "TEST00055844302",
+      vpc_Merchant: process.env.vpc_Merchant,
       vpc_Amount: "100",
       vpc_CardNum: "4434260000000008",
       vpc_CardExp: "2105",
       vpc_CardSecurityCode: "100",
     };
     const headers = {
-      "Access-Control-Allow-Origin": '*',
+      "Access-Control-Allow-Origin": "*"
     }
 
-    axios.post('https://migs.mastercard.com.au/vpcdps', nvp, {
-      headers: headers
+    axios.post('https://my-json-server.typicode.com/typicode/demo/comments', nvp, {
+      headers: headers,
+      crossDomain: true,
     })
     .then(function (response) {
       console.log(response);
@@ -133,44 +118,27 @@ function App () {
         <Col style={{
           justifyContent: "flex-end"
         }}>
-          <h2>Migs Testing Tool</h2>
+          <h2>MiGS Payment</h2>
         </Col>
       </Row>
       <Row>
         <Col>
           <Form className="pay-form">
-            
-            <h4>Payment Details</h4>
-            <Form.Group controlId="orderID">
-              <Form.Label>Order ID</Form.Label>
-              <Form.Control size="lg" type="text" placeholder="Order ID" defaultValue={orderID}/>
-            </Form.Group>
-
-            <Form.Group controlId="amount">
-              <Row>
-                <Col>
-                  <Form.Label>Amount</Form.Label>
-                </Col>
-              </Row>
-              <Row>
-                <Col className="col-5 col-sm-3">
-                  <Form.Control 
-                    size="lg" 
-                    type="text" 
-                    as="select"
-                  >
-                    {
-                      currencies.map(
-                        currency => (<option key={currency.currency} value={currency.sign+" "+currency.currency}>{currency.currency}</option>)
-                      )
-                    }
-                  </Form.Control>
-                </Col>
-                <Col>
-                  <Form.Control size="lg" aria-label="Amount (to the nearest dollar)" ref={amountRef}/>
-                </Col>
-              </Row>
-            </Form.Group>
+            <Row>
+              <Col className="">
+                <h4>ABC Shoe Online</h4>
+                <p>Nike Airforce I - NAK edtion 2002</p>
+                <br/>
+                <h3
+                  style={{
+                    background:"#ddd",
+                    padding: "12px",
+                    borderRadius: "6px",
+                  }}
+                >USD $20.00</h3>
+                <br></br>
+              </Col>
+            </Row>
 
             <br></br>
             <h4>Billing Details</h4>
