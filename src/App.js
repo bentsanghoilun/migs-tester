@@ -97,7 +97,7 @@ function App () {
       "Access-Control-Allow-Origin": "*"
     }
 
-    axios.post('https://my-json-server.typicode.com/typicode/demo/comments', nvp, {
+    axios.post('https://migs.mastercard.com.au/vpcpay', nvp, {
       headers: headers,
       crossDomain: true,
     })
